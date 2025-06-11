@@ -117,21 +117,29 @@ Once the application is running, you can explore and interact with the API using
 
 ### Key Endpoints
 
-| Method | Endpoint                    | Access  | Description                                        |
-| :----- | :-------------------------- | :------ | :------------------------------------------------- |
-| `POST` | `/api/v1/auth/register`     | Public  | Register a new user account.                       |
-| `POST` | `/api/v1/auth/authenticate` | Public  | Authenticate and receive a JWT access token.       |
-| `GET`  | `/api/v1/users`             | `ADMIN` | Get a paginated list of all users.                 |
-| `GET`  | `/api/v1/users/{id}`        | `USER`  | Get details for a specific user.                   |
-| `PUT`  | `/api/v1/users/{id}`        | `USER`  | Update a user's details.                           |
+| Method | Endpoint                    | Access  | Description                                  |
+| :----- |:----------------------------| :------ |:---------------------------------------------|
+| `POST` | `/api/v1/auth/register`     | Public  | Register a new user account.                 |
+| `POST` | `/api/v1/auth/authenticate` | Public  | Authenticate and receive a JWT access token. |
+| `GET`  | `/api/v1/users`             | `ADMIN` | Get a paginated list of all users.           |
+| `GET`  | `/api/v1/users/{id}`        | `USER`  | Get details for a specific user.             |
+| `PUT`  | `/api/v1/users/{id}`        | `USER`  | Update a user's details.                     |
+| `GET`  | `/api/v1/todos`             | `USER`  | Get todos listing                            |
+| `GET`  | `/api/v1/todos/{id}`        | `USER`  | Get todos specific todos                     |
 
 ### Example `cURL` Request
 
 ```bash
+
+# 1. Register sample user
+TOKEN=$(curl -s -X POST http://localhost:8080/api/v1/auth/authenticate \
+-H "Content-Type: application/json" \
+-d '{"username": "user", "email": "user@example.com", "password": "password"}' | jq -r '.access_token')
+
 # 1. Authenticate to get a token
 TOKEN=$(curl -s -X POST http://localhost:8080/api/v1/auth/authenticate \
 -H "Content-Type: application/json" \
--d '{"email": "user@example.com", "password": "password"}' | jq -r '.access_token')
+-d '{"username": "user", "password": "password"}' | jq -r '.access_token')
 
 # 2. Use the token to access a protected endpoint
 curl -X GET http://localhost:8080/api/v1/users/1 \
